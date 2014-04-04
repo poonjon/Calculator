@@ -10,3 +10,4 @@ void push(Stack *stack, void *data);
 void *pop(Stack *stack);
 
 #endif // Stack_H
+	
