@@ -6,4 +6,6 @@ void tryEvaluateOperatorsOnStackThenPush(Stack *operatorStack, Stack *dataStack,
 void evaluateAllOperatorsOnStack(Stack *operatorStack, Stack *dataStack);
 void evaluateOperator(Stack *dataStack, OperatorToken *operator);
 int operator_check(OperatorToken *operator);
+void check_operator(OperatorToken *operator);
+void check_number(NumberToken *number); 
 #endif // evaluate_H
