@@ -7,7 +7,7 @@
 
 
 int evaluate(char *expression, Stack *operatorStack, Stack *dataStack){
-	int i;
+	int i, test;
 	Tokenizer *tokenizer;
 	OperatorToken *operator;
 	NumberToken *number;
@@ -18,13 +18,13 @@ int evaluate(char *expression, Stack *operatorStack, Stack *dataStack){
 	check_number(number);
 		
 	for(i=0; (operator != NULL || number != NULL) ; i++ ){
-	
 		
 		if(i == 0){
 			push(dataStack, number);
 			
 			operator = (OperatorToken *)nextToken(tokenizer);
 			check_operator(operator);	
+			operator_check(operator);
 			push(operatorStack, operator);
 			
 			number = (NumberToken *)nextToken(tokenizer);
@@ -61,25 +61,25 @@ void tryEvaluateOperatorsOnStackThenPush(Stack *operatorStack, Stack *dataStack,
 	
 		precedence_old = token->precedence;
 		
-		if(token == NULL){
-			push(operatorStack, operator);
-			break;
-		}
-		
-		else if(precedence_old < precedence_new){
+		if(precedence_old < precedence_new){
 			push(operatorStack, token);
 			push(operatorStack, operator);
 			break;
 		}
 		
-		else if(precedence_old > precedence_new || precedence_old == precedence_new){
+		else if(precedence_old >= precedence_new){
 			evaluateOperator(dataStack, token);
-						
 		}
 		
 		else
 			Throw(ERR_INVALID_TOKEN);
+	
+		token = pop(operatorStack);
 	}
+	
+	if(token == NULL)
+		push(operatorStack, operator);
+	
 }
 
 void evaluateAllOperatorsOnStack(Stack *operatorStack, Stack *dataStack){
@@ -163,7 +163,10 @@ void evaluateOperator(Stack *dataStack, OperatorToken *operator){
 
 void check_number(NumberToken *number){
 		
-		if(number->type != NUMBER_TOKEN)
+		if(number == NULL)
+			Throw(ERR_NOT_DATA);
+
+		else if(number->type != NUMBER_TOKEN)
 			Throw(ERR_NOT_DATA);
 }
 
